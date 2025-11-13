@@ -1,64 +1,68 @@
 import { Form, Button } from '@douyinfe/semi-ui'
-
-import styles from './login.module.scss'
 import { useNavigate } from 'react-router-dom'
 
-const Signup = () => {
+const Login = () => {
   const navigate = useNavigate()
+
   return (
-    <div className={styles.frame}>
-      <div className={styles.main}>
-        <div className={styles.login}>
-          <div className={styles.component66}>
+    <div className="flex flex-col items-center bg-[rgb(var(--semi-grey-0))] min-h-screen overflow-hidden font-[PingFang_SC]">
+      <main className="flex flex-col flex-grow items-center justify-center w-full p-4 space-y-4">
+        <div className="flex flex-col items-center bg-[var(--semi-color-bg-0)] rounded-lg shadow-[0_0_1px_0_#0000004d,0_4px_14px_0_#0000001a] px-14 py-12 w-full max-w-[552px] min-h-[546px] space-y-[30px]">
+          <div className="flex flex-col items-center space-y-6">
             <img
               src="https://lf26-static.semi.design/obj/semi-tos/template/10ad1e1b-7ea2-47df-9a25-aa16d20ffaf7.SVG"
-              className={styles.logo}
+              alt="logo"
+              className="w-[72px] h-[72px]"
             />
-            <div className={styles.header}>
-              <p className={styles.title}>欢迎回来</p>
-              <p className={styles.text3}>
-                <span className={styles.text}>注册</span>
-                <span className={styles.text2}>&nbsp;生科芯创&nbsp;</span>
-                <span className={styles.text}>账户</span>
+            <header className="flex flex-col items-center justify-center space-y-[6px]">
+              <p className="text-[32px] leading-[44px] font-semibold text-[var(--semi-color-text-0)]">
+                欢迎回来
               </p>
-            </div>
+              <p className="text-[16px] leading-[22px] text-[var(--semi-color-text-2)]">
+                <span>注册</span>
+                <span className="font-[Inter] tracking-[-0.32px]">
+                  &nbsp;生科芯创&nbsp;
+                </span>
+                <span>账户</span>
+              </p>
+            </header>
           </div>
-          <div className={styles.form}>
-            <Form className={styles.inputs}>
+
+          {/* 表单部分 */}
+          <div className="flex flex-col items-start w-full space-y-7">
+            <Form className="flex flex-col w-full space-y-6">
               <Form.Input
                 label={{ text: '用户名' }}
-                field="input"
+                field="username"
                 placeholder="输入用户名"
-                fieldStyle={{ padding: 0 }}
-                style={{ width: 440 }}
-                className={styles.formField}
+                style={{ width: '100%' }}
               />
               <Form.Input
                 label={{ text: '密码' }}
-                field="field1"
+                field="password"
                 placeholder="输入密码"
-                fieldStyle={{ padding: 0 }}
-                style={{ width: 440 }}
-                className={styles.formField}
+                style={{ width: '100%' }}
               />
             </Form>
-            <p>
-              已经有了账号？
+
+            <p className="text-[14px] text-gray-600">
+              已经有账号了？{' '}
               <span
-                className="text-blue-500 hover:cursor-pointer"
                 onClick={() => navigate('/login')}
+                className="text-blue-500 hover:underline cursor-pointer"
               >
                 点击这里去登录
               </span>
             </p>
-            <Button theme="solid" className={styles.button}>
+
+            <Button theme="solid" className="w-full h-10">
               注册
             </Button>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
 
-export default Signup
+export default Login

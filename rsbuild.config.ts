@@ -1,10 +1,10 @@
 import { defineConfig } from '@rsbuild/core'
 import { pluginReact } from '@rsbuild/plugin-react'
-import { pluginSass } from '@rsbuild/plugin-sass';
+import { pluginSass } from '@rsbuild/plugin-sass'
 
 export default defineConfig({
   plugins: [pluginReact(), pluginSass()],
   html: {
-    title: 'SKXC后台管理系统'
-  }
+    title: 'SKXC后台管理系统',
+  },
 })
