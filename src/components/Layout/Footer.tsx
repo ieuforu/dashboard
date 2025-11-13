@@ -1,7 +1,9 @@
 import { Layout } from '@douyinfe/semi-ui'
+import { Typography } from '@douyinfe/semi-ui'
 
 const Footer = () => {
   const { Footer } = Layout
+  const { Text } = Typography
   return (
     <Footer
       style={{
@@ -23,7 +25,12 @@ const Footer = () => {
         </span>
       </span>
       <span>
-        <span style={{ marginRight: '24px' }}>平台客服</span>
+        <Text
+          className="mr-6"
+          link={{ href: 'https://new.vskxc.com/', target: '_blank' }}
+        >
+          生科芯创
+        </Text>
         <span>反馈建议</span>
       </span>
     </Footer>

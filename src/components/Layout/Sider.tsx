@@ -11,7 +11,7 @@ const Sider = () => {
   const { Sider } = Layout
   const location = useLocation()
   const selectedKey = location.pathname.split('/')[1] || 'home'
-  const navigate = useNavigate()
+
   return (
     <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
       <Nav
@@ -47,8 +47,6 @@ const Sider = () => {
             {itemElement}
           </Link>
         )}
-        onSelect={data => {}}
-        onClick={data => {}}
       />
     </Sider>
   )
