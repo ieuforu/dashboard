@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom'
 const Header = () => {
   const { Header } = Layout
   const navigate = useNavigate()
+  const handleLogout = () => {
+    navigate('/login')
+    localStorage.clear()
+  }
   return (
     <Header style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
       <Nav
@@ -32,9 +36,7 @@ const Header = () => {
               render={
                 <Dropdown.Menu>
                   <Dropdown.Item>详情</Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate('/login')}>
-                    退出
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>退出</Dropdown.Item>
                 </Dropdown.Menu>
               }
             >
