@@ -10,8 +10,8 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "@douyinfe/semi-icons": "^2.87.1",
-    "@douyinfe/semi-ui": "^2.87.1",
+    "@douyinfe/semi-icons": "^2.88.0",
+    "@douyinfe/semi-ui": "^2.88.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.9.5"
