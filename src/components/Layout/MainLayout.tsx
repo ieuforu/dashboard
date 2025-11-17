@@ -11,9 +11,7 @@ const MainLayout = () => {
       <Sider />
       <Layout>
         <Header />
-        <Content
-          style={{ padding: '24px', backgroundColor: 'var(--semi-color-bg-0)' }}
-        >
+        <Content className="p-20 bg-[var(--semi-color-bg-0)] w-full mx-auto!">
           <Outlet />
         </Content>
         <Footer />

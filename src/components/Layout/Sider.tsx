@@ -1,11 +1,6 @@
-import {
-  IconHome,
-  IconHistogram,
-  IconSetting,
-  IconSemiLogo,
-} from '@douyinfe/semi-icons'
+import { IconHome, IconSetting, IconSemiLogo } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 
 const Sider = () => {
   const { Sider } = Layout
@@ -23,11 +18,6 @@ const Sider = () => {
             itemKey: 'home',
             text: '首页',
             icon: <IconHome size="large" />,
-          },
-          {
-            itemKey: 'histogram',
-            text: '基础数据',
-            icon: <IconHistogram size="large" />,
           },
           {
             itemKey: 'setting',
