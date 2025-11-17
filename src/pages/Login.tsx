@@ -1,9 +1,40 @@
-import { Form, Button } from '@douyinfe/semi-ui'
+import { Form, Button, Toast } from '@douyinfe/semi-ui'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const navigate = useNavigate()
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const handleSubmit = async (values: any) => {
+    try {
+      const res = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        Toast.success('登录成功！')
+        localStorage.setItem('user_token', data.token)
+        navigate('/')
+      } else {
+        Toast.error(data.message || '登录失败')
+      }
+    } catch (err) {
+      Toast.error('网络错误')
+    }
+  }
+  const validateEmail = (value: string) => {
+    if (!value) {
+      return '邮箱不能为空'
+    }
+    if (!EMAIL_REGEX.test(value)) {
+      return '请输入正确的邮箱格式'
+    }
+
+    return undefined
+  }
   return (
     <div className="flex flex-col items-center bg-[rgb(var(--semi-grey-0))] min-h-screen overflow-hidden font-[PingFang_SC]">
       <main className="flex flex-col flex-grow items-center justify-center w-full p-4 space-y-4">
@@ -13,26 +44,24 @@ const Login = () => {
             <img src="/logo.png" alt="logo" className="w-[72px] h-[72px]" />
             <header className="flex flex-col items-center justify-center space-y-[6px]">
               <p className="text-[32px] leading-[44px] font-semibold text-[var(--semi-color-text-0)]">
-                欢迎回来
-              </p>
-              <p className="text-[16px] leading-[22px] text-[var(--semi-color-text-2)]">
-                <span>登录</span>
-                <span className="font-[Inter] tracking-[-0.32px]">
-                  &nbsp;生科芯创&nbsp;
-                </span>
-                <span>账户</span>
+                登录账户
               </p>
             </header>
           </div>
 
           {/* 表单部分 */}
           <div className="flex flex-col items-start w-full space-y-7">
-            <Form className="flex flex-col w-full space-y-2">
+            <Form
+              onSubmit={values => handleSubmit(values)}
+              className="flex flex-col w-full space-y-2"
+            >
               <Form.Input
-                label={{ text: '用户名' }}
-                field="username"
-                placeholder="输入用户名"
+                label={{ text: '邮箱' }}
+                field="email"
+                placeholder="输入邮箱"
                 style={{ width: '100%' }}
+                validate={validateEmail}
+                validateTrigger="blur"
               />
               <Form.Input
                 label={{ text: '密码' }}
@@ -40,6 +69,9 @@ const Login = () => {
                 placeholder="输入密码"
                 style={{ width: '100%' }}
               />
+              <Button htmlType="submit" theme="solid" className="w-full h-10">
+                登录
+              </Button>
             </Form>
 
             <p className="text-[14px] text-gray-600">
@@ -51,10 +83,6 @@ const Login = () => {
                 点击这里去注册
               </span>
             </p>
-
-            <Button theme="solid" className="w-full h-10">
-              登录
-            </Button>
           </div>
         </div>
       </main>
