@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import MainLayout from '../components/Layout/MainLayout'
 import Home from '../pages/Home'
-import Histogram from '../pages/Histogram'
 import Setting from '../pages/Setting'
 import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import { ProtectedRoute } from '../components/ProtectedRoute'
+import Profile from '../pages/Profile'
 
 export const AppRoutes = () => (
   <Routes>
@@ -23,6 +23,7 @@ export const AppRoutes = () => (
       <Route path="/home" element={<Home />} />
       <Route path="/" element={<Navigate to="/home" replace />} />
       <Route path="/setting" element={<Setting />} />
+      <Route path="/profile" element={<Profile />} />
     </Route>
   </Routes>
 )

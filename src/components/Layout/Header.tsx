@@ -35,7 +35,9 @@ const Header = () => {
               position="bottomRight"
               render={
                 <Dropdown.Menu>
-                  <Dropdown.Item>详情</Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate('/profile')}>
+                    个人主页
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={handleLogout}>退出</Dropdown.Item>
                 </Dropdown.Menu>
               }
