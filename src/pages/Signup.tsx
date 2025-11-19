@@ -18,7 +18,7 @@ const Login = () => {
         Toast.success('注册成功！')
         navigate('/login')
       } else if (res.status === 409) {
-        Toast.error('该邮箱已注册')
+        Toast.error(data.message)
       } else {
         Toast.error(data.message || '注册失败')
       }
@@ -54,7 +54,7 @@ const Login = () => {
           {/* 表单部分 */}
           <div className="flex flex-col items-start w-full space-y-7">
             <Form
-              onSubmit={handleSubmit} // ✅ 直接传 handleSubmit 即可，Semi 会自动传 values
+              onSubmit={handleSubmit}
               className="flex flex-col w-full space-y-2"
             >
               <Form.Input
@@ -65,12 +65,15 @@ const Login = () => {
                 validate={validateEmail} // ✅ 绑定校验函数
                 validateTrigger="blur" // 可选：失焦时校验（默认是 onChange + onSubmit）
               />
+
               <Form.Input
+                mode="password"
                 label={{ text: '密码' }}
                 field="password"
                 placeholder="输入密码"
                 style={{ width: '100%' }}
               />
+
               <Button htmlType="submit" theme="solid" className="w-full h-10">
                 注册
               </Button>

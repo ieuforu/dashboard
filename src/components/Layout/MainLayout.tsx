@@ -11,7 +11,7 @@ const MainLayout = () => {
       <Sider />
       <Layout>
         <Header />
-        <Content className="p-20 bg-[var(--semi-color-bg-0)] w-full mx-auto!">
+        <Content className="p-20 bg-gray-50 w-full mx-auto!">
           <Outlet />
         </Content>
         <Footer />

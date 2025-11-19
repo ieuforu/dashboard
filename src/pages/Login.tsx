@@ -25,6 +25,7 @@ const Login = () => {
       Toast.error('网络错误')
     }
   }
+
   const validateEmail = (value: string) => {
     if (!value) {
       return '邮箱不能为空'
@@ -35,6 +36,7 @@ const Login = () => {
 
     return undefined
   }
+
   return (
     <div className="flex flex-col items-center bg-[rgb(var(--semi-grey-0))] min-h-screen overflow-hidden font-[PingFang_SC]">
       <main className="flex flex-col flex-grow items-center justify-center w-full p-4 space-y-4">
@@ -63,12 +65,15 @@ const Login = () => {
                 validate={validateEmail}
                 validateTrigger="blur"
               />
+
               <Form.Input
+                mode="password"
                 label={{ text: '密码' }}
                 field="password"
                 placeholder="输入密码"
                 style={{ width: '100%' }}
               />
+
               <Button htmlType="submit" theme="solid" className="w-full h-10">
                 登录
               </Button>
