@@ -1,5 +1,4 @@
 import { Form, Button, Toast } from '@douyinfe/semi-ui'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -22,15 +21,15 @@ const Login = () => {
     }
   }
 
-  const validateEmail = (value: string) => {
+  const validateEmail = (value: string): string => {
     if (!value) return '邮箱不能为空'
     if (!EMAIL_REGEX.test(value)) return '请输入正确的邮箱格式'
-    return undefined
+    return ''
   }
 
-  const validatePassword = (value: string) => {
+  const validatePassword = (value: string): string => {
     if (!value) return '密码不能为空'
-    return undefined
+    return ''
   }
 
   return (
