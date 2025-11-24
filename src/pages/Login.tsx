@@ -1,39 +1,32 @@
 import { Form, Button, Toast } from '@douyinfe/semi-ui'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const Login = () => {
   const navigate = useNavigate()
 
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const { login, isLoading } = useAuth()
 
   const handleSubmit = async (values: any) => {
-    try {
-      const res = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-      const data = await res.json()
-      if (res.ok) {
-        Toast.success('登录成功！')
-        localStorage.setItem('user_token', data.token)
-        navigate('/')
-      } else {
-        Toast.error(data.message || '登录失败')
-      }
-    } catch (err) {
-      Toast.error('网络错误')
+    const res = await login(values.email, values.password)
+
+    if (res.success) {
+      Toast.success('登录成功！')
+    } else {
+      Toast.error(res.message)
     }
   }
 
   const validateEmail = (value: string) => {
-    if (!value) {
-      return '邮箱不能为空'
-    }
-    if (!EMAIL_REGEX.test(value)) {
-      return '请输入正确的邮箱格式'
-    }
+    if (!value) return '邮箱不能为空'
+    if (!EMAIL_REGEX.test(value)) return '请输入正确的邮箱格式'
+    return undefined
+  }
 
+  const validatePassword = (value: string) => {
+    if (!value) return '密码不能为空'
     return undefined
   }
 
@@ -54,7 +47,7 @@ const Login = () => {
           {/* 表单部分 */}
           <div className="flex flex-col items-start w-full space-y-7">
             <Form
-              onSubmit={values => handleSubmit(values)}
+              onSubmit={handleSubmit}
               className="flex flex-col w-full space-y-2"
             >
               <Form.Input
@@ -63,7 +56,7 @@ const Login = () => {
                 placeholder="输入邮箱"
                 style={{ width: '100%' }}
                 validate={validateEmail}
-                validateTrigger="blur"
+                trigger="blur"
               />
 
               <Form.Input
@@ -72,9 +65,17 @@ const Login = () => {
                 field="password"
                 placeholder="输入密码"
                 style={{ width: '100%' }}
+                validate={validatePassword}
+                trigger="blur"
               />
 
-              <Button htmlType="submit" theme="solid" className="w-full h-10">
+              <Button
+                htmlType="submit"
+                theme="solid"
+                className="w-full h-10"
+                loading={isLoading}
+                disabled={isLoading}
+              >
                 登录
               </Button>
             </Form>

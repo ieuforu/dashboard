@@ -1,40 +1,35 @@
+// src/pages/Signup.tsx
 import { Form, Button, Toast } from '@douyinfe/semi-ui'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const Login = () => {
+const Signup = () => {
   const navigate = useNavigate()
 
+  const { signup, isLoading } = useAuth()
+
   const handleSubmit = async (values: any) => {
-    try {
-      const res = await fetch('/api/users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-      const data = await res.json()
-      if (res.ok) {
-        Toast.success('注册成功！')
-        navigate('/login')
-      } else if (res.status === 409) {
-        Toast.error(data.message)
-      } else {
-        Toast.error(data.message || '注册失败')
-      }
-    } catch (err) {
-      Toast.error('网络错误')
+    const res = await signup(values.email, values.password)
+
+    if (res.success) {
+      Toast.success(res.message || '注册成功！')
+      navigate('/login')
+    } else {
+      Toast.error(res.message)
     }
   }
 
   const validateEmail = (value: string) => {
-    if (!value) {
-      return '邮箱不能为空'
-    }
-    if (!EMAIL_REGEX.test(value)) {
-      return '请输入正确的邮箱格式'
-    }
+    if (!value) return '邮箱不能为空'
+    if (!EMAIL_REGEX.test(value)) return '请输入正确的邮箱格式'
+    return undefined
+  }
 
+  const validatePassword = (value: string) => {
+    if (!value) return '密码不能为空'
+    if (value.length < 8) return '密码长度不能少于 8 位'
     return undefined
   }
 
@@ -51,7 +46,6 @@ const Login = () => {
             </header>
           </div>
 
-          {/* 表单部分 */}
           <div className="flex flex-col items-start w-full space-y-7">
             <Form
               onSubmit={handleSubmit}
@@ -62,19 +56,27 @@ const Login = () => {
                 field="email"
                 placeholder="输入邮箱"
                 style={{ width: '100%' }}
-                validate={validateEmail} // ✅ 绑定校验函数
-                validateTrigger="blur" // 可选：失焦时校验（默认是 onChange + onSubmit）
+                validate={validateEmail}
+                trigger="blur"
               />
 
               <Form.Input
                 mode="password"
                 label={{ text: '密码' }}
                 field="password"
-                placeholder="输入密码"
+                placeholder="输入密码 (至少8位)"
                 style={{ width: '100%' }}
+                validate={validatePassword}
+                trigger="blur"
               />
 
-              <Button htmlType="submit" theme="solid" className="w-full h-10">
+              <Button
+                htmlType="submit"
+                theme="solid"
+                className="w-full h-10"
+                loading={isLoading}
+                disabled={isLoading}
+              >
                 注册
               </Button>
             </Form>
@@ -95,4 +97,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signup
