@@ -21,16 +21,16 @@ const Signup = () => {
     }
   }
 
-  const validateEmail = (value: string) => {
+  const validateEmail = (value: string): string => {
     if (!value) return '邮箱不能为空'
     if (!EMAIL_REGEX.test(value)) return '请输入正确的邮箱格式'
-    return undefined
+    return ''
   }
 
-  const validatePassword = (value: string) => {
+  const validatePassword = (value: string): string => {
     if (!value) return '密码不能为空'
     if (value.length < 8) return '密码长度不能少于 8 位'
-    return undefined
+    return ''
   }
 
   return (
