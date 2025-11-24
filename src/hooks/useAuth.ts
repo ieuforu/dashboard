@@ -65,7 +65,7 @@ export const useAuth = (): AuthHook => {
     email: string,
     password: string,
   ): Promise<ApiResponse> => {
-    const res = await request<LoginResponseData>('/api/login', {
+    const res = await request<LoginResponseData>('/api/users/login', {
       email,
       password,
     })
@@ -90,7 +90,7 @@ export const useAuth = (): AuthHook => {
     email: string,
     password: string,
   ): Promise<ApiResponse> => {
-    const res = await request('/api/register', { email, password })
+    const res = await request('/api/users/register', { email, password })
 
     return res
   }
