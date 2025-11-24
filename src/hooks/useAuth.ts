@@ -1,13 +1,18 @@
+// src/hooks/useAuth.ts
 import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
-import type { ApiResponse, JwtPayload, LoginResponseData } from '../types/api'
+import type { JwtPayload, LoginResponseData, ApiResponse } from '../types/api'
+import { api } from '../lib/api'
 
 interface AuthHook {
   user: JwtPayload | null
   isAuthenticated: boolean
   isLoading: boolean
-  login: (email: string, password: string) => Promise<ApiResponse>
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<ApiResponse<LoginResponseData>>
   signup: (email: string, password: string) => Promise<ApiResponse>
   logout: () => void
 }
@@ -16,14 +21,14 @@ export const useAuth = (): AuthHook => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
+  // 初始化时解析本地 token
   const [user, setUser] = useState<JwtPayload | null>(() => {
     const token = localStorage.getItem('user_token')
     if (!token) return null
 
     try {
       const payload = jwtDecode<JwtPayload>(token)
-      const isExpired = Date.now() >= payload.exp * 1000
-      if (isExpired) {
+      if (Date.now() >= payload.exp * 1000) {
         localStorage.removeItem('user_token')
         return null
       }
@@ -34,26 +39,28 @@ export const useAuth = (): AuthHook => {
     }
   })
 
-  const request = async <T>(
-    endpoint: string,
-    payload: object,
-  ): Promise<ApiResponse<T>> => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      const res = await fetch(endpoint, {
+      const res = await api<ApiResponse<LoginResponseData>>('/users/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ email, password }),
       })
 
-      const data: ApiResponse<T> = await res.json()
+      if (res.success && res.data?.token) {
+        const token = res.data.token
+        localStorage.setItem('user_token', token)
+        const decoded = jwtDecode<JwtPayload>(token)
+        setUser(decoded)
+        navigate('/')
+      }
 
-      return data
+      return res
     } catch (error) {
-      console.error('Request Failed:', error)
+      // api.ts 已经处理了 401，这里只处理网络错误
       return {
         success: false,
-        message: '网络连接失败，请检查您的网络设置',
+        message: '网络连接失败，请检查网络后重试',
         code: 'NETWORK_ERROR',
       }
     } finally {
@@ -61,38 +68,23 @@ export const useAuth = (): AuthHook => {
     }
   }
 
-  const login = async (
-    email: string,
-    password: string,
-  ): Promise<ApiResponse> => {
-    const res = await request<LoginResponseData>('/api/users/login', {
-      email,
-      password,
-    })
-
-    if (res.success && res.data?.token) {
-      const token = res.data.token
-      localStorage.setItem('user_token', token)
-
-      try {
-        const decoded = jwtDecode<JwtPayload>(token)
-        setUser(decoded)
-        navigate('/')
-      } catch (e) {
-        return { success: false, message: 'Token 解析失败' }
+  const signup = async (email: string, password: string) => {
+    setIsLoading(true)
+    try {
+      const res = await api<ApiResponse>('/users/register', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      })
+      return res
+    } catch {
+      return {
+        success: false,
+        message: '注册失败，请检查网络',
+        code: 'NETWORK_ERROR',
       }
+    } finally {
+      setIsLoading(false)
     }
-
-    return res
-  }
-
-  const signup = async (
-    email: string,
-    password: string,
-  ): Promise<ApiResponse> => {
-    const res = await request('/api/users/register', { email, password })
-
-    return res
   }
 
   const logout = useCallback(() => {

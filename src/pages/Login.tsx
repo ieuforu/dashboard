@@ -1,12 +1,13 @@
 import { Form, Button, Toast } from '@douyinfe/semi-ui'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const Login = () => {
   const navigate = useNavigate()
-
+  const location = useLocation()
   const { login, isLoading } = useAuth()
 
   const handleSubmit = async (values: any) => {
@@ -14,6 +15,8 @@ const Login = () => {
 
     if (res.success) {
       Toast.success('登录成功！')
+      const from = (location.state as { from?: string })?.from || '/'
+      navigate(from, { replace: true })
     } else {
       Toast.error(res.message)
     }

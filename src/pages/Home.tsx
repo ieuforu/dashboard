@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Card, Table, Avatar, Button, Toast, Tag } from '@douyinfe/semi-ui'
-import { IconUser, IconExit } from '@douyinfe/semi-icons'
+import { IconExit } from '@douyinfe/semi-icons'
 import { useAuth } from '../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
+import type { ApiResponse } from '../types/api'
+import { api } from '../lib/api'
 
 // 定义用户列表的数据结构
 interface UserData {
@@ -14,6 +17,7 @@ const Home = () => {
   // 1. 获取当前登录用户信息
   const { user, logout } = useAuth()
 
+  const navigate = useNavigate()
   // 2. 状态管理：用户列表数据
   const [dataSource, setDataSource] = useState<UserData[]>([])
   const [loading, setLoading] = useState(false)
@@ -22,26 +26,14 @@ const Home = () => {
   const fetchAllUsers = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('user_token')
-      // 注意：这里需要带上 Authorization 头
-      const res = await fetch('/api/users', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Hono 的 jwt 中间件通常解析 Bearer Token
-          // 如果后端没配置 Bearer 前缀，就直接写 token
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const result = await res.json()
-
+      const result = await api<ApiResponse<UserData[]>>('/users')
       if (result.success) {
-        setDataSource(result.data)
+        setDataSource(result.data!)
       } else {
-        Toast.error(result.message || '获取数据失败')
+        Toast.error(result.message || '获取失败')
       }
-    } catch (error) {
-      Toast.error('网络请求错误')
+    } catch {
+      navigate('/login')
     } finally {
       setLoading(false)
     }
